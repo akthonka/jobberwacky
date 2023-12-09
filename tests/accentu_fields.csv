@@ -1,0 +1,17 @@
+Type,Name,ID,Class,Value,Placeholder,Data-Automation-ID
+text,,input-1,css-1jafa2r,,Search,
+radio,,1,css-pl53xa,,,
+radio,,2,css-pl53xa,,,
+text,,,css-77hcv,187134fccb084a0ea9b4b95f23890dbe,,
+text,,input-4,css-ilrio6,,,legalNameSection_firstName
+text,,input-5,css-ilrio6,,,legalNameSection_lastName
+checkbox,,input-6,css-1rmmx2s,on,,preferredNameCheckbox
+text,,input-7,css-ilrio6,,,addressSection_addressLine1
+text,,input-8,css-ilrio6,,,addressSection_addressLine2
+text,,input-9,css-ilrio6,,,addressSection_postalCode
+text,,input-10,css-ilrio6,,,addressSection_city
+text,,,css-77hcv,,,
+text,,,css-77hcv,136d83bad7ee01812713d293bf001900,,
+text,,input-14,css-8e4xta,,Search,
+text,,input-15,css-ilrio6,,,phone-number
+text,,input-16,css-ilrio6,,,phone-extension
