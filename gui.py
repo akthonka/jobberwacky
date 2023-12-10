@@ -3,18 +3,54 @@ from selenium import webdriver
 from modules.form_filler import FormFiller
 from selenium.common.exceptions import WebDriverException
 import os
+import csv
+
+
+def read_csv_data(file_path):
+    with open(file_path, mode="r", encoding="utf-8") as file:
+        reader = csv.DictReader(file)
+        return {row["Name"]: row["Value"] for row in reader}
 
 
 def run_app():
+    # Read data from CSV
+    input_dir = os.path.join(os.getcwd(), "data", "input", "input_fields.csv")
+    csv_data = read_csv_data(input_dir)
+
     # Define the window's contents (layout)
     layout = [
         [sg.Text("Enter the URL of the job application website:")],
-        [sg.Input(key="-URL-")],
+        [sg.Input(key="-URL-", expand_x=True)],
         [sg.Button("Go"), sg.Button("Auto-Fill"), sg.Button("Cancel")],
+        [
+            sg.Text("First Name:", size=(15, 1)),
+            sg.InputText(
+                key="-firstName-",
+                default_text=csv_data.get("firstName", ""),
+                expand_x=True,
+            ),
+        ],
+        [
+            sg.Text("Last Name:", size=(15, 1)),
+            sg.InputText(
+                key="-lastName-",
+                default_text=csv_data.get("lastName", ""),
+                expand_x=True,
+            ),
+        ],
+        [
+            sg.Text("Email:", size=(15, 1)),
+            sg.InputText(
+                key="-email-",
+                default_text=csv_data.get("email", ""),
+                expand_x=True,
+            ),
+        ],
+        # Add more fields as needed
     ]
 
     # Create the window
-    window = sg.Window("Job Application Auto-Filler", layout)
+    window = sg.Window("Job Application Auto-Filler", layout, resizable=True)
     driver = None
 
     # Event loop
