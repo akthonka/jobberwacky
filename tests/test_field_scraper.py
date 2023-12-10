@@ -71,7 +71,7 @@ if __name__ == "__main__":
     if fields:
         # Extract the first 7 characters of the URL
         url_prefix = url[8:15].replace("://", "_").replace("/", "_")
-        filename = f"{url_prefix}_fields.csv"
+        filename = f"../data/test_data/{url_prefix}_fields.csv"
 
         save_to_csv(fields, filename)
         print(f"Fields saved to {filename}")

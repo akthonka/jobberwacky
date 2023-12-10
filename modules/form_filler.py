@@ -1,52 +1,48 @@
+import csv
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+import threading
+import os
+
+print("Current Working Directory:", os.getcwd())
 
 
-class FormFiller:
-    def __init__(self, driver_path, form_data):
-        self.driver = webdriver.Chrome(executable_path=driver_path)
-        self.form_data = form_data
+def read_csv_data(file_path):
+    with open(file_path, mode="r", encoding="utf-8") as file:
+        reader = csv.DictReader(file)
+        return [row for row in reader]
 
-    def fill_text_field(self, field_name, value):
-        """Fill a text field identified by its name."""
-        element = WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.NAME, field_name))
-        )
-        element.clear()
-        element.send_keys(value)
 
-    def fill_form(self, url):
-        """Navigate to the form URL and fill in the form with provided data."""
-        self.driver.get(url)
+def fill_form(driver, form_data):
+    for field in form_data:
+        try:
+            element = driver.find_element(
+                By.XPATH, f"//*[contains(@name, '{field['Name']}')]"
+            )
+            element.clear()
+            element.send_keys(field["Value"])
+        except Exception as e:
+            print(f"Could not find or fill the field: {field['Name']}. Error: {e}")
 
-        # For each field in the form data, fill the field
-        for field_name, value in self.form_data.items():
-            self.fill_text_field(field_name, value)
 
-        # Add logic for other types of fields like radio buttons, checkboxes, dropdowns, etc.
-
-        # Uncomment the next line to submit the form
-        # self.driver.find_element_by_id('submit-button-id').click()
-
-    def close_browser(self):
-        """Close the web browser."""
-        self.driver.quit()
+def wait_for_user_input():
+    input("Press Enter in the console to start filling out the form...")
 
 
 if __name__ == "__main__":
-    # Example usage
-    driver_path = "path/to/chromedriver"
-    form_data = {
-        "first_name": "John",
-        "last_name": "Doe",
-        # Add other form fields here
-    }
-    url = "https://example.com/job-application-form"
+    driver = webdriver.Chrome()
+    url = "https://idtechex.bamboohr.com/careers/87?source=aWQ9MTU%3D"
+    driver.get(url)  # Replace with the actual URL of the form
 
-    filler = FormFiller(driver_path, form_data)
-    filler.fill_form(url)
-    # Uncomment the next line to close the browser after filling the form
-    # filler.close_browser()
+    # Start a thread to wait for user input
+    user_input_thread = threading.Thread(target=wait_for_user_input)
+    user_input_thread.start()
+
+    # Wait for the user input thread to complete
+    user_input_thread.join()
+
+    form_data = read_csv_data("../data/input/input_fields.csv")
+    fill_form(driver, form_data)
+
+    input("Press Enter to exit and close the browser...")
+    driver.quit()
