@@ -2,6 +2,7 @@ import PySimpleGUI as sg
 from selenium import webdriver
 from modules.form_filler import FormFiller
 from selenium.common.exceptions import WebDriverException
+import pandas as pd
 import os
 import csv
 
@@ -12,42 +13,45 @@ def read_csv_data(file_path):
         return {row["Name"]: row["Value"] for row in reader}
 
 
+def create_input_row(field_name, default_value=""):
+    return [
+        sg.Text(f"{field_name}:", size=(15, 1)),
+        sg.InputText(
+            default_text=default_value, key=f"-{field_name.upper()}-", expand_x=True
+        ),
+    ]
+
+
 def run_app():
-    # Read data from CSV
-    input_dir = os.path.join(os.getcwd(), "data", "input", "input_fields.csv")
-    csv_data = read_csv_data(input_dir)
+    # Set theme
+    sg.theme("LightBrown2")
 
     # Define the window's contents (layout)
+    input_dir = os.path.join(os.getcwd(), "data", "input", "input_fields.csv")
     layout = [
         [sg.Text("Enter the URL of the job application website:")],
         [sg.Input(key="-URL-", expand_x=True)],
         [sg.Button("Go"), sg.Button("Auto-Fill"), sg.Button("Cancel")],
-        [
-            sg.Text("First Name:", size=(15, 1)),
-            sg.InputText(
-                key="-firstName-",
-                default_text=csv_data.get("firstName", ""),
-                expand_x=True,
-            ),
-        ],
-        [
-            sg.Text("Last Name:", size=(15, 1)),
-            sg.InputText(
-                key="-lastName-",
-                default_text=csv_data.get("lastName", ""),
-                expand_x=True,
-            ),
-        ],
-        [
-            sg.Text("Email:", size=(15, 1)),
-            sg.InputText(
-                key="-email-",
-                default_text=csv_data.get("email", ""),
-                expand_x=True,
-            ),
-        ],
-        # Add more fields as needed
     ]
+
+    # Create text fields from csv rows
+    with open(input_dir, mode="r", encoding="utf-8") as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            layout.append(create_input_row(row["Name"], row["Value"]))
+
+    # Add empty fields (i.e. for login data)
+    custom_fields = [
+        [
+            sg.Text("Custom 1:", size=(15, 1)),
+            sg.InputText(key="-custom1-", expand_x=True),
+        ],
+        [
+            sg.Text("Custom 2:", size=(15, 1)),
+            sg.InputText(key="-custom2-", expand_x=True),
+        ],
+    ]
+    layout.append(custom_fields)
 
     # Create the window
     window = sg.Window("Job Application Auto-Filler", layout, resizable=True)
