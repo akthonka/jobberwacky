@@ -34,7 +34,7 @@ class FormFiller:
 
     def try_select_option(self, value):
         try:
-            option = driver.find_element(By.XPATH, f"//div[text()='{value}']")
+            option = self.driver.find_element(By.XPATH, f"//div[text()='{value}']")
             option.click()
             print(f"found a match for {value}")
             return True
@@ -42,7 +42,7 @@ class FormFiller:
             print(f"no match found for {value}")
             return False
 
-    def select_dropdowns(self, driver):
+    def select_dropdowns(self):
         # Update list of dropdown info
         input_dir = os.path.join(os.getcwd(), "data", "input", "dropdown_fields.csv")
         with open(input_dir, mode="r", encoding="utf-8") as csvfile:
@@ -52,7 +52,9 @@ class FormFiller:
         print(self.values_to_select)
 
         # Find all dropdown elements on the page
-        dropdown_toggles = driver.find_elements(By.CSS_SELECTOR, ".fab-SelectToggle")
+        dropdown_toggles = self.driver.find_elements(
+            By.CSS_SELECTOR, ".fab-SelectToggle"
+        )
         print("number of toggles = ", len(dropdown_toggles))
 
         # Iterate over each toggle and try to select each value from the list
@@ -60,15 +62,12 @@ class FormFiller:
             print(toggle)
             toggle.click()
             time.sleep(1)  # Wait for dropdown options to appear
-            for value in form_filler.values_to_select:
+            for value in self.values_to_select:
                 print(f"processing {value}...")
-                if form_filler.try_select_option(value):
+                if self.try_select_option(value):
                     print(f"!!! Selected {value} !!!")
-                    break  # Move to the next dropdown if a value is successfully selected
-            time.sleep(0.5)  # Optional: Brief pause before moving to the next dropdown
-
-        dropdown_toggles = driver.find_elements(By.CSS_SELECTOR, ".fab-SelectToggle")
-        print("number of toggles = ", len(dropdown_toggles))
+                    break
+            time.sleep(0.5)
 
 
 if __name__ == "__main__":
@@ -77,14 +76,14 @@ if __name__ == "__main__":
         input("Press Enter in the console to start filling out the form...")
 
     # Dynamic URL
-    # print("Current Working Directory:", os.getcwd())
-    # parser = argparse.ArgumentParser(description="Webpage fields scraper.")
-    # parser.add_argument("url", help="URL of the webpage to scrape")
-    # args = parser.parse_args()
-    # url = args.url  # URL from command-line argument
+    print("Current Working Directory:", os.getcwd())
+    parser = argparse.ArgumentParser(description="Webpage fields scraper.")
+    parser.add_argument("url", help="URL of the webpage to scrape")
+    args = parser.parse_args()
+    url = args.url  # URL from command-line argument
+    # url = "https://idtechex.bamboohr.com/careers/87?source=aWQ9MTU%3D"
 
-    # Static URL for testing purposes
-    url = "https://idtechex.bamboohr.com/careers/87?source=aWQ9MTU%3D"
+    # Launch Chrome
     driver = webdriver.Chrome()
     driver.get(url)
 
@@ -101,7 +100,7 @@ if __name__ == "__main__":
 
     # Process dropdowns
     input("Press Enter to attempt to fillout dropdown lists")
-    form_filler.select_dropdowns(driver)
+    form_filler.select_dropdowns()
 
     input("Press Enter to exit and close the browser...")
     driver.quit()

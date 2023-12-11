@@ -30,7 +30,12 @@ def run_app():
     layout = [
         [sg.Text("Enter the URL of the job application website:")],
         [sg.Input(key="-URL-", expand_x=True)],
-        [sg.Button("Go"), sg.Button("Auto-Fill"), sg.Button("Cancel")],
+        [
+            sg.Button("Go"),
+            sg.Button("Auto-Fill"),
+            sg.Button("Fill Dropdowns"),
+            sg.Button("Cancel"),
+        ],
     ]
 
     # Create text fields from csv rows
@@ -55,6 +60,7 @@ def run_app():
     # Create the window
     window = sg.Window("Job Application Auto-Filler", layout, resizable=True)
     driver = None
+    form_filler = None
 
     # Event loop
     while True:
@@ -71,6 +77,7 @@ def run_app():
                 try:
                     driver = webdriver.Chrome()
                     driver.get(url)
+                    form_filler = FormFiller(driver)
                 except WebDriverException as e:
                     sg.popup_error(f"Failed to open browser: {e}")
             else:
@@ -80,7 +87,7 @@ def run_app():
         if event == "Auto-Fill" and driver:
             try:
                 # Initialize FormFiller and call fill_form
-                form_filler = FormFiller(driver)
+                # form_filler = FormFiller(driver)
                 input_dir = os.path.join(
                     os.getcwd(), "data", "input", "input_fields.csv"
                 )
@@ -88,6 +95,13 @@ def run_app():
                 form_filler.fill_form(driver, form_data)
             except Exception as e:
                 sg.popup_error(f"Error filling form: {e}")
+
+        # When 'Fill Dropdowns' is clicked
+        if event == "Fill Dropdowns" and driver and form_filler:
+            try:
+                form_filler.select_dropdowns()
+            except Exception as e:
+                sg.popup_error(f"Whoops... {e}")
 
     # Close the window and the browser
     window.close()
