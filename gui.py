@@ -2,7 +2,6 @@ import PySimpleGUI as sg
 from selenium import webdriver
 from modules.form_filler import FormFiller
 from selenium.common.exceptions import WebDriverException
-import pandas as pd
 import os
 import csv
 
