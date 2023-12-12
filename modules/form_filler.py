@@ -15,6 +15,10 @@ class FormFiller:
         self.driver = driver
         # List of possible values to select
         self.values_to_select = []
+        self.field_alternatives = {
+            "zipcode": ["zip", "postcode", "zipcode"],
+            # Add other fields and their alternatives as needed
+        }
 
     def read_csv_data(self, file_path):
         with open(file_path, mode="r", encoding="utf-8") as file:
@@ -23,14 +27,27 @@ class FormFiller:
 
     def fill_form(self, driver, form_data):
         for field in form_data:
-            try:
-                element = driver.find_element(
-                    By.XPATH, f"//*[contains(@name, '{field['Name']}')]"
-                )
-                element.clear()
-                element.send_keys(field["Value"])
-            except Exception as e:
-                print(f"Could not find or fill the field: {field['Name']}. Error: {e}")
+            field_name = field["Name"].lower()
+            possible_field_names = self.field_alternatives.get(field_name, [field_name])
+
+            field_filled = False
+            for possible_name in possible_field_names:
+                try:
+                    element = driver.find_element(
+                        By.XPATH, f"//*[contains(@name, '{possible_name}')]"
+                    )
+                    element.clear()
+                    element.send_keys(field["Value"])
+                    print(f"Filled field: {possible_name}")
+                    field_filled = True
+                    break  # Stop trying alternatives if successful
+                except Exception as e:
+                    print(
+                        f"Could not find field: {possible_name}. Trying next alternative..."
+                    )
+
+            if not field_filled:
+                print(f"Could not fill any field for {field_name}")
 
     def try_select_option(self, value):
         try:
