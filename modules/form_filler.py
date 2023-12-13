@@ -11,12 +11,14 @@ from selenium.common.exceptions import NoSuchElementException
 
 class FormFiller:
     def __init__(self, driver):
-        # Default Chrome driver
-        self.driver = driver
-        # List of possible values to select
-        self.values_to_select = []
+        self.driver = driver  # Default Chrome driver
+        self.values_to_select = []  # List of possible values to select
         self.field_alternatives = {
-            "zipcode": ["zip", "postcode", "zipcode"],
+            "firstName": ["firstName", "name"],
+            "lastName": ["lastName", "surName"],
+            "zipcode": ["zipcode", "zip", "postcode"],
+            "phone": ["phone", "mobile"],
+            "state": ["state", "county"]
             # Add other fields and their alternatives as needed
         }
 
@@ -27,27 +29,33 @@ class FormFiller:
 
     def fill_form(self, driver, form_data):
         for field in form_data:
-            field_name = field["Name"].lower()
-            possible_field_names = self.field_alternatives.get(field_name, [field_name])
+            field_name = field["Name"]
+            value_to_enter = field["Value"]
+
+            # Try different selectors to find the field
+            selectors = [
+                f"//*[contains(@name, '{field_name}')]",  # name attribute
+                f"//*[@data-automation-id='{field_name}']",  # data-automation-id attribute
+                f"//*[@id='{field_name}']",  # id attribute
+                # Add more selectors if needed
+            ]
 
             field_filled = False
-            for possible_name in possible_field_names:
+            for selector in selectors:
                 try:
-                    element = driver.find_element(
-                        By.XPATH, f"//*[contains(@name, '{possible_name}')]"
-                    )
+                    element = driver.find_element(By.XPATH, selector)
                     element.clear()
-                    element.send_keys(field["Value"])
-                    print(f"Filled field: {possible_name}")
+                    element.send_keys(value_to_enter)
+                    print(f"Filled field using selector: {selector}")
                     field_filled = True
                     break  # Stop trying alternatives if successful
                 except Exception as e:
                     print(
-                        f"Could not find field: {possible_name}. Trying next alternative..."
+                        f"Could not find field using selector: {selector}. Trying next..."
                     )
 
-            if not field_filled:
-                print(f"Could not fill any field for {field_name}")
+        if not field_filled:
+            print(f"Could not fill any field for {field_name}")
 
     def try_select_option(self, value):
         try:
