@@ -1,15 +1,12 @@
+import os
 import PySimpleGUI as sg
 from selenium import webdriver
-from modules.form_filler import FormFiller
 from selenium.common.exceptions import WebDriverException
-import os
-import csv
 
+from modules.form_filler import FormFiller
+from modules.commons import Commons
 
-def read_csv_data(file_path):
-    with open(file_path, mode="r", encoding="utf-8") as file:
-        reader = csv.DictReader(file)
-        return {row["Name"]: row["Value"] for row in reader}
+commons = Commons()
 
 
 def create_input_row(field_name, default_value=""):
@@ -39,10 +36,10 @@ def run_app():
     ]
 
     # Create text fields from csv rows
-    with open(input_dir, mode="r", encoding="utf-8") as csvfile:
-        reader = csv.DictReader(csvfile)
-        for row in reader:
-            layout.append(create_input_row(row["Name"], row["Value"]))
+    input_dir = os.path.join(os.getcwd(), "data", "input", "input_fields.csv")
+    csv_data = commons.read_csv_data(input_dir)
+    for key, value in csv_data.items():
+        layout.append(create_input_row(key, value))
 
     # Add empty fields (i.e. for login data)
     custom_fields = [
@@ -91,15 +88,15 @@ def run_app():
                 input_dir = os.path.join(
                     os.getcwd(), "data", "input", "input_fields.csv"
                 )
-                form_data = form_filler.read_csv_data(input_dir)
-                form_filler.fill_form(driver, form_data)
+                form_filler.fill_fields(driver)
             except Exception as e:
                 sg.popup_error(f"Error filling form: {e}")
 
         # When 'Fill Dropdowns' is clicked
         if event == "Fill Dropdowns" and driver and form_filler:
             try:
-                form_filler.select_dropdowns()
+                # form_filler.select_dropdowns()
+                pass
             except Exception as e:
                 sg.popup_error(f"Whoops... {e}")
 
