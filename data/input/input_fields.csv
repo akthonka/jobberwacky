@@ -1,10 +1,10 @@
 Name,Value
-Given Name(s)*,Art
-Family Name*,Vandelay
-email,importer@exporter.com
-phone,+41795555555
-street,129 West 81st Street
-city,New York City
-state,New York
-zipcode,NY 10024
-linkedin,linkedin.com/in/artvandelay
+FirstName,Art
+LastName,Vandelay
+Email,importer@exporter.com
+Phone,+41795555555
+Street,129 West 81st Street
+City,New York City
+State,New York
+Zipcode,NY 10024
+LinkedIn,linkedin.com/in/artvandelay

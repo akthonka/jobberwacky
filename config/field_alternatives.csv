@@ -1,0 +1,4 @@
+FirstName,LastName,Email,Phone,Street,City,State,Zipcode,LinkedIn
+name,surname,email,mobile,street,city,state,zip,linkedin
+firstname,lastname,,phone,address,town,county,zipcode,webpage
+givenname,familyname,,phonenumber,,,,postcode,
