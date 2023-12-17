@@ -30,7 +30,7 @@ def run_app():
         [
             sg.Button("Go"),
             sg.Button("Auto-Fill"),
-            sg.Button("Fill Dropdowns"),
+            # sg.Button("Fill Dropdowns"),
             sg.Button("Cancel"),
         ],
     ]
@@ -55,7 +55,9 @@ def run_app():
     layout.append(custom_fields)
 
     # Create the window
-    window = sg.Window("Job Application Auto-Filler", layout, resizable=True)
+    window = sg.Window(
+        "Job Application Auto-Filler", layout, size=(300, 320), resizable=True
+    )
     driver = None
     form_filler = None
 
@@ -93,12 +95,12 @@ def run_app():
                 sg.popup_error(f"Error filling form: {e}")
 
         # When 'Fill Dropdowns' is clicked
-        if event == "Fill Dropdowns" and driver and form_filler:
-            try:
-                # form_filler.select_dropdowns()
-                pass
-            except Exception as e:
-                sg.popup_error(f"Whoops... {e}")
+        # if event == "Fill Dropdowns" and driver and form_filler:
+        #     try:
+        #         # form_filler.select_dropdowns()
+        #         pass
+        #     except Exception as e:
+        #         sg.popup_error(f"Whoops... {e}")
 
     # Close the window and the browser
     window.close()

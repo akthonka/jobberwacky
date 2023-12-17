@@ -1,8 +1,29 @@
-# jobberwacky
-## Job Application Companion and Autofiller
+# JobberWacky
+### Job Application Companion and Autofiller
+## About
 
-The goal of this application is to partially automate form field filling where possible and to be supplemented by copy-paste-ready text GUI elsewhere.
+The goal of this personal project is to partially automate the tedium of online job applications. The main purpose of JobberWacky to fill common webpage form fields; these usually come with different names, which is accounted for using an internal database and regex expressions.
 
-![alt text](images/ver2.png)
+The application is built in python, using Selenium module for page automation, with JavaScript for webpage element scraping.
 
-The application now uses Selenium and JS.
+## Features
+- custom form-fields with naming-variations support
+- modular regex field name parsing
+- dynamic GUI field rendering
+- fall-back GUI copy-paste functionality
+
+## Planned
+- dropdown selector support is currently being reworked
+- (maybe) better window resizing with element scaling
+- (maybe) standalone application support for portable use
+
+## Screenshots
+![alt text](images/ver3.png)
+<p style="text-align: center;">Main Gui (v3)</p>
+
+
+![alt text](images/alt_fields.png)
+<p style="text-align: center;">Alternate field name library</p>
+
+## Known Issues
+- duplicate filling of similar fields, such as _Address 1_, _Address 2_
