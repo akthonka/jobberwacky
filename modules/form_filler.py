@@ -49,7 +49,7 @@ class FormFiller:
         commons = Commons()
         csv_dir = os.path.join(os.getcwd(), "data", "input", "input_fields.csv")
         csv_data = commons.read_csv_data(csv_dir)
-        # print(csv_data)
+        print(csv_data)
 
         input_dir = os.path.join(os.getcwd(), "scripts", "dank.js")
         js_code = commons.read_javascript(input_dir)

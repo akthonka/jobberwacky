@@ -85,6 +85,7 @@ def run_app():
         # When 'Auto-Fill' is clicked
         if event == "Auto-Fill" and driver:
             try:
+                print("running Autofill...")
                 # Initialize FormFiller and call fill_form
                 # form_filler = FormFiller(driver)
                 input_dir = os.path.join(

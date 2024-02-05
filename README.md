@@ -13,6 +13,7 @@ The application is built in python, using Selenium module for page automation, w
 - fall-back GUI copy-paste functionality
 
 ## Planned
+- csv user data file  import selector
 - dropdown selector support is currently being reworked
 - (maybe) better window resizing with element scaling
 - (maybe) standalone application support for portable use
